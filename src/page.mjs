@@ -173,8 +173,7 @@ export function renderPage({ config, now, checksUpdated, endpoints, overall, new
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
     <div class="container">
       <a class="navbar-brand" href="https://nrec.no/">
-        <img src="assets/img/nrec-10y.gif" alt="NREC logo">
-        <span class="brand-wordmark">NREC</span>
+        <img src="assets/img/nrec-vertical_light.svg" alt="NREC">
       </a>
       <button class="navbar-toggler" type="button" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
