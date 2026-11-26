@@ -1,0 +1,525 @@
+.page-view {
+    padding: 0;
+    margin-top: 0; /* Start at very top */
+    padding-top: 152px; /* 72px navbar + 80px content padding */
+    padding-bottom: 60px;
+    min-height: calc(100vh); /* Full viewport height */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, #1a365d 0%, #2d3748 50%, #285f88 100%) !important;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Banner: extend background up to cover gap behind fixed navbar */
+.bg-primary.page-view {
+    padding-top: 55px !important; /* 72px navbar + 80px content */
+    overflow: visible;
+}
+
+/* Extend banner background up to cover white gap */
+.bg-primary.page-view::after {
+    content: '';
+    position: absolute;
+    top: -72px;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: linear-gradient(135deg, #1a365d 0%, #2d3748 50%, #285f88 100%);
+    z-index: -1;
+}
+
+.bg-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Extend decorative overlay for banner to cover gap area */
+.bg-primary.page-view::before {
+    top: -72px;
+    height: calc(100% + 72px);
+}
+
+.bg-light {
+    background-color: #f7fafc !important;
+}
+
+.navbar {
+    font-size: 16px;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    min-height: 72px; /* Ensures consistent navbar height */
+    width: 100%;
+    margin: 0;
+}
+
+.navbar-brand img {
+    height: 40px;
+    transition: transform 0.3s ease;
+}
+
+/* Wordmark companion for the anniversary GIF (icon-only mark otherwise loses the name) */
+.brand-wordmark {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+    margin-left: 0.6rem;
+    vertical-align: middle;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.footer_custom {
+    background: linear-gradient(135deg, #1a365d 0%, #285f88 100%);
+    padding: 3rem 0 1rem;
+    color: #ffffff;
+}
+
+.footer_custom .copyright {
+    color: #ffffff;
+}
+
+.footer_custom .copyright p {
+    color: #ffffff !important;
+}
+
+.footer_custom .footer-menu {
+    gap: 1.5rem;
+}
+
+.footer_custom .footer-menu li {
+    margin: 0;
+    padding: 0 0.75rem;
+}
+
+.footer_custom .footer-menu li:first-child {
+    padding-left: 0;
+}
+
+.footer_custom .footer-menu li:last-child {
+    padding-right: 0;
+}
+
+.footer_custom .footer-menu a {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    border-bottom: none !important;
+}
+
+.footer_custom .footer-menu a:hover {
+    color: #ffffff !important;
+    border-bottom: none !important;
+}
+
+.icon_some_small:hover {
+    color: #edf0fa;
+}
+
+.icon_some_large {
+    color: #134f7d;
+    display: inline-block;
+    text-align: center;
+    padding: 1em;
+    margin: 0.5em;
+    transition: all 0.3s ease;
+    font-size: 25px;
+    text-decoration: none;
+}
+
+.icon_some_large:hover {
+    color: #285f88;
+    transform: none;
+}
+
+.icon_large {
+    color: #285f88;
+    display: block;
+    text-align: center;
+    padding: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.subtitle_text1 {
+    margin-top: 1.5em;
+    font-size: 1.25rem;
+    margin-bottom: 1em;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.subtitle_text2 {
+    padding-top: 1em;
+    font-size: 1.15rem;
+    margin-bottom: 0.4em;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+strong {
+    font-weight: 570;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Override Bootstrap container to be uniform */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Remove any default margins that create white space */
+.page-view + .container {
+    margin-top: 0 !important;
+    padding-top: 4rem;
+}
+
+/* Ensure sections are uniform */
+.section {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* Remove top margin from first section after banner */
+#services + .container .section,
+.container:first-of-type .section {
+    margin-top: 0;
+    padding-top: 4rem;
+}
+
+body { 
+    padding: 0;
+    margin: 0;
+    font-size: 1.1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.6;
+    color: #2d3748;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #ffffff;
+}
+
+p {
+    margin-bottom: 1.25rem;
+    color: #4a5568;
+}
+
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.text-muted {
+    color: #718096 !important;
+}
+
+.nav-link {
+    transition: color 0.2s ease;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+}
+
+.nav-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Lift content above decorative overlays */
+.content-layer {
+    position: relative;
+    z-index: 1;
+}
+
+/* 10-year anniversary badge (2016-2026) */
+.anniversary-badge {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    background: #e8a33d;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Hero heading */
+.display-4 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+/* Hero image */
+.hero-image {
+    border-radius: 12px;
+}
+
+/* Footer divider */
+.footer-divider {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+h2 {
+    margin-top: 2em;
+    font-size: 2.75rem;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+h3 {
+    margin-top: 1.5em;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.4em;
+}
+
+
+/* Supporters logo */
+
+/* Partners Logos - Fixed width row with wrap */
+.partners-logos-container {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 0;
+}
+
+.partners-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.partner-logo {
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+    display: block;
+}
+
+.partner-logo:hover {
+    opacity: 0.8;
+}
+
+/* Individual partner logo sizing - adjust as needed */
+.partner-logo-uio,
+.partner-logo-uib,
+.partner-logo-neic,
+.partner-logo-naic,
+.partner-logo-alice,
+.partner-logo-atlas,
+.partner-logo-wlcg {
+    width: 125px;
+    height: auto;
+    max-height: 70px;
+}
+
+/* Modern Card style */
+.card_style {
+    border: none;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card_style .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.card_style .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    color: #1a365d;
+}
+
+.card_style .card-text {
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* Compact services grid */
+.services-grid .card_style {
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.services-grid .card_style .card-body {
+    padding: 0.4rem;
+}
+
+.services-grid .card_style .card-title {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+}
+
+.services-grid .card_style .card-text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.services-grid .icon_large {
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+
+
+/* Compact contact links - behave like text, not buttons */
+#contact .icon_some_large {
+    padding: 0.5em;
+    margin: 0.25em;
+    font-size: 16px;
+    user-select: text;
+    -webkit-user-select: text;
+    cursor: text;
+}
+
+#contact .icon_some_large:hover {
+    color: #285f88;
+    transform: none;
+}
+
+/* Manage Display Headers for Mobile Devices */
+@media (max-width: 576px) {
+
+    .display-4 {
+        font-size: 1.75rem;
+        font-weight: 300;
+        line-height: 1.0;
+    }
+
+    h2{
+        font-size: 1.9rem;
+    }
+
+    h3{
+        font-size: 1.5rem;
+    }
+
+    h5{
+        font-size: 0.9rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    ul {
+        font-size: 0.9rem;
+    }
+
+    .subtitle_text2 {
+        padding-top: 0.75em;
+        font-size: 1rem;
+    }
+
+    .card_style {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    
+    .card_style .card-body {
+        padding: 1rem;
+    }
+
+    .icon_large {
+        padding: 0.5rem;
+        font-size: 2rem;
+    }
+    .icon_some_large {
+        padding: 0.5em;
+        margin: 0.25em;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 415px) {
+    h3{
+        font-size: 1.1rem;
+    }
+}
+
+
+
+@media (max-width: 320px) {
+
+    h2{
+        font-size: 1.3rem;
+    }
+
+    h3{
+        font-size: 1rem;
+    }
+}
+
+
+/* Branding colour swatches */
+.color-swatches {
+    font-size: 16px;
+    display: flex;
+    width: 70%;
+}
+
+.color-swatch {
+    flex: 1;
+    padding-top: 30px;
+    text-align: center;
+}

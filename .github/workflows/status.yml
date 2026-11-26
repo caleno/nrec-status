@@ -1,0 +1,77 @@
+name: Check and publish status
+
+on:
+  schedule:
+    # GitHub may delay scheduled runs by several minutes under load.
+    - cron: '*/15 * * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # push collected data to the `data` branch
+  pages: write
+  id-token: write
+
+concurrency:
+  group: status
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Collected data lives on its own branch so main only holds code and
+      # the history of check results doesn't clutter it. The branch is
+      # replaced with a single commit each run; the JSON files carry the
+      # history themselves (7 days raw, 90 days daily).
+      - name: Restore data from the data branch
+        run: |
+          mkdir -p data
+          if git fetch --depth=1 origin data 2>/dev/null; then
+            git archive FETCH_HEAD | tar -x -C data
+          fi
+
+      - name: Collect checks and news
+        run: node scripts/collect.mjs --data data
+
+      - name: Save data to the data branch
+        run: |
+          cd data
+          git init -q -b data
+          git add -A
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Status data $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Until a real metrics source exists, use the sample usage numbers.
+      - name: Use sample metrics if none were collected
+        run: '[ -f data/metrics.json ] || cp sample-data/metrics.json data/metrics.json'
+
+      - name: Build site
+        run: node scripts/build.mjs --data data --out _site
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

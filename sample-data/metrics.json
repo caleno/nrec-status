@@ -1,0 +1,816 @@
+{
+  "updated": "2026-11-26T13:48:47.045Z",
+  "source": "mock",
+  "series": [
+    {
+      "date": "2026-08-29",
+      "users": 2310,
+      "projects": 1266,
+      "instances": {
+        "bgo": 1488,
+        "osl": 1813
+      }
+    },
+    {
+      "date": "2026-08-30",
+      "users": 2312,
+      "projects": 1266,
+      "instances": {
+        "bgo": 1503,
+        "osl": 1814
+      }
+    },
+    {
+      "date": "2026-08-31",
+      "users": 2314,
+      "projects": 1266,
+      "instances": {
+        "bgo": 1492,
+        "osl": 1826
+      }
+    },
+    {
+      "date": "2026-09-01",
+      "users": 2318,
+      "projects": 1267,
+      "instances": {
+        "bgo": 1485,
+        "osl": 1818
+      }
+    },
+    {
+      "date": "2026-09-02",
+      "users": 2319,
+      "projects": 1267,
+      "instances": {
+        "bgo": 1474,
+        "osl": 1829
+      }
+    },
+    {
+      "date": "2026-09-03",
+      "users": 2321,
+      "projects": 1268,
+      "instances": {
+        "bgo": 1482,
+        "osl": 1816
+      }
+    },
+    {
+      "date": "2026-09-04",
+      "users": 2323,
+      "projects": 1268,
+      "instances": {
+        "bgo": 1494,
+        "osl": 1816
+      }
+    },
+    {
+      "date": "2026-09-05",
+      "users": 2325,
+      "projects": 1269,
+      "instances": {
+        "bgo": 1487,
+        "osl": 1800
+      }
+    },
+    {
+      "date": "2026-09-06",
+      "users": 2325,
+      "projects": 1271,
+      "instances": {
+        "bgo": 1500,
+        "osl": 1811
+      }
+    },
+    {
+      "date": "2026-09-07",
+      "users": 2327,
+      "projects": 1272,
+      "instances": {
+        "bgo": 1505,
+        "osl": 1807
+      }
+    },
+    {
+      "date": "2026-09-08",
+      "users": 2329,
+      "projects": 1272,
+      "instances": {
+        "bgo": 1502,
+        "osl": 1813
+      }
+    },
+    {
+      "date": "2026-09-09",
+      "users": 2330,
+      "projects": 1272,
+      "instances": {
+        "bgo": 1504,
+        "osl": 1802
+      }
+    },
+    {
+      "date": "2026-09-10",
+      "users": 2332,
+      "projects": 1272,
+      "instances": {
+        "bgo": 1496,
+        "osl": 1788
+      }
+    },
+    {
+      "date": "2026-09-11",
+      "users": 2336,
+      "projects": 1273,
+      "instances": {
+        "bgo": 1485,
+        "osl": 1806
+      }
+    },
+    {
+      "date": "2026-09-12",
+      "users": 2338,
+      "projects": 1274,
+      "instances": {
+        "bgo": 1477,
+        "osl": 1808
+      }
+    },
+    {
+      "date": "2026-09-13",
+      "users": 2342,
+      "projects": 1274,
+      "instances": {
+        "bgo": 1484,
+        "osl": 1806
+      }
+    },
+    {
+      "date": "2026-09-14",
+      "users": 2344,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1475,
+        "osl": 1818
+      }
+    },
+    {
+      "date": "2026-09-15",
+      "users": 2347,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1462,
+        "osl": 1807
+      }
+    },
+    {
+      "date": "2026-09-16",
+      "users": 2350,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1455,
+        "osl": 1808
+      }
+    },
+    {
+      "date": "2026-09-17",
+      "users": 2352,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1471,
+        "osl": 1804
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "users": 2355,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1477,
+        "osl": 1819
+      }
+    },
+    {
+      "date": "2026-09-19",
+      "users": 2357,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1491,
+        "osl": 1819
+      }
+    },
+    {
+      "date": "2026-09-20",
+      "users": 2361,
+      "projects": 1275,
+      "instances": {
+        "bgo": 1501,
+        "osl": 1832
+      }
+    },
+    {
+      "date": "2026-09-21",
+      "users": 2364,
+      "projects": 1276,
+      "instances": {
+        "bgo": 1512,
+        "osl": 1834
+      }
+    },
+    {
+      "date": "2026-09-22",
+      "users": 2365,
+      "projects": 1276,
+      "instances": {
+        "bgo": 1507,
+        "osl": 1833
+      }
+    },
+    {
+      "date": "2026-09-23",
+      "users": 2367,
+      "projects": 1277,
+      "instances": {
+        "bgo": 1495,
+        "osl": 1834
+      }
+    },
+    {
+      "date": "2026-09-24",
+      "users": 2369,
+      "projects": 1277,
+      "instances": {
+        "bgo": 1502,
+        "osl": 1831
+      }
+    },
+    {
+      "date": "2026-09-25",
+      "users": 2371,
+      "projects": 1278,
+      "instances": {
+        "bgo": 1492,
+        "osl": 1830
+      }
+    },
+    {
+      "date": "2026-09-26",
+      "users": 2372,
+      "projects": 1278,
+      "instances": {
+        "bgo": 1485,
+        "osl": 1826
+      }
+    },
+    {
+      "date": "2026-09-27",
+      "users": 2375,
+      "projects": 1279,
+      "instances": {
+        "bgo": 1472,
+        "osl": 1826
+      }
+    },
+    {
+      "date": "2026-09-28",
+      "users": 2378,
+      "projects": 1280,
+      "instances": {
+        "bgo": 1462,
+        "osl": 1824
+      }
+    },
+    {
+      "date": "2026-09-29",
+      "users": 2379,
+      "projects": 1281,
+      "instances": {
+        "bgo": 1460,
+        "osl": 1811
+      }
+    },
+    {
+      "date": "2026-09-30",
+      "users": 2381,
+      "projects": 1281,
+      "instances": {
+        "bgo": 1454,
+        "osl": 1808
+      }
+    },
+    {
+      "date": "2026-10-01",
+      "users": 2382,
+      "projects": 1282,
+      "instances": {
+        "bgo": 1446,
+        "osl": 1802
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "users": 2386,
+      "projects": 1282,
+      "instances": {
+        "bgo": 1452,
+        "osl": 1803
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "users": 2389,
+      "projects": 1282,
+      "instances": {
+        "bgo": 1449,
+        "osl": 1795
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "users": 2390,
+      "projects": 1282,
+      "instances": {
+        "bgo": 1464,
+        "osl": 1804
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "users": 2392,
+      "projects": 1283,
+      "instances": {
+        "bgo": 1465,
+        "osl": 1800
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "users": 2393,
+      "projects": 1283,
+      "instances": {
+        "bgo": 1463,
+        "osl": 1799
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "users": 2394,
+      "projects": 1283,
+      "instances": {
+        "bgo": 1452,
+        "osl": 1808
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "users": 2396,
+      "projects": 1283,
+      "instances": {
+        "bgo": 1449,
+        "osl": 1810
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "users": 2397,
+      "projects": 1284,
+      "instances": {
+        "bgo": 1462,
+        "osl": 1827
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "users": 2400,
+      "projects": 1284,
+      "instances": {
+        "bgo": 1463,
+        "osl": 1818
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "users": 2403,
+      "projects": 1285,
+      "instances": {
+        "bgo": 1479,
+        "osl": 1814
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "users": 2406,
+      "projects": 1286,
+      "instances": {
+        "bgo": 1492,
+        "osl": 1802
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "users": 2409,
+      "projects": 1288,
+      "instances": {
+        "bgo": 1507,
+        "osl": 1790
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "users": 2410,
+      "projects": 1288,
+      "instances": {
+        "bgo": 1509,
+        "osl": 1780
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "users": 2412,
+      "projects": 1288,
+      "instances": {
+        "bgo": 1519,
+        "osl": 1773
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "users": 2413,
+      "projects": 1288,
+      "instances": {
+        "bgo": 1527,
+        "osl": 1771
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "users": 2417,
+      "projects": 1289,
+      "instances": {
+        "bgo": 1527,
+        "osl": 1777
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "users": 2421,
+      "projects": 1290,
+      "instances": {
+        "bgo": 1527,
+        "osl": 1764
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "users": 2424,
+      "projects": 1290,
+      "instances": {
+        "bgo": 1530,
+        "osl": 1769
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "users": 2425,
+      "projects": 1290,
+      "instances": {
+        "bgo": 1523,
+        "osl": 1781
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "users": 2427,
+      "projects": 1291,
+      "instances": {
+        "bgo": 1524,
+        "osl": 1767
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "users": 2430,
+      "projects": 1292,
+      "instances": {
+        "bgo": 1515,
+        "osl": 1778
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "users": 2431,
+      "projects": 1292,
+      "instances": {
+        "bgo": 1515,
+        "osl": 1787
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "users": 2435,
+      "projects": 1293,
+      "instances": {
+        "bgo": 1502,
+        "osl": 1793
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "users": 2437,
+      "projects": 1294,
+      "instances": {
+        "bgo": 1499,
+        "osl": 1790
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "users": 2440,
+      "projects": 1295,
+      "instances": {
+        "bgo": 1512,
+        "osl": 1793
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "users": 2440,
+      "projects": 1296,
+      "instances": {
+        "bgo": 1506,
+        "osl": 1798
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "users": 2440,
+      "projects": 1297,
+      "instances": {
+        "bgo": 1511,
+        "osl": 1812
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "users": 2441,
+      "projects": 1298,
+      "instances": {
+        "bgo": 1526,
+        "osl": 1811
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "users": 2443,
+      "projects": 1299,
+      "instances": {
+        "bgo": 1513,
+        "osl": 1796
+      }
+    },
+    {
+      "date": "2026-10-31",
+      "users": 2445,
+      "projects": 1300,
+      "instances": {
+        "bgo": 1511,
+        "osl": 1799
+      }
+    },
+    {
+      "date": "2026-11-01",
+      "users": 2448,
+      "projects": 1301,
+      "instances": {
+        "bgo": 1516,
+        "osl": 1787
+      }
+    },
+    {
+      "date": "2026-11-02",
+      "users": 2451,
+      "projects": 1302,
+      "instances": {
+        "bgo": 1531,
+        "osl": 1786
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "users": 2451,
+      "projects": 1302,
+      "instances": {
+        "bgo": 1546,
+        "osl": 1803
+      }
+    },
+    {
+      "date": "2026-11-04",
+      "users": 2453,
+      "projects": 1302,
+      "instances": {
+        "bgo": 1562,
+        "osl": 1814
+      }
+    },
+    {
+      "date": "2026-11-05",
+      "users": 2454,
+      "projects": 1302,
+      "instances": {
+        "bgo": 1550,
+        "osl": 1830
+      }
+    },
+    {
+      "date": "2026-11-06",
+      "users": 2457,
+      "projects": 1303,
+      "instances": {
+        "bgo": 1558,
+        "osl": 1843
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "users": 2458,
+      "projects": 1304,
+      "instances": {
+        "bgo": 1546,
+        "osl": 1837
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "users": 2459,
+      "projects": 1304,
+      "instances": {
+        "bgo": 1554,
+        "osl": 1846
+      }
+    },
+    {
+      "date": "2026-11-09",
+      "users": 2460,
+      "projects": 1304,
+      "instances": {
+        "bgo": 1564,
+        "osl": 1851
+      }
+    },
+    {
+      "date": "2026-11-10",
+      "users": 2462,
+      "projects": 1305,
+      "instances": {
+        "bgo": 1574,
+        "osl": 1844
+      }
+    },
+    {
+      "date": "2026-11-11",
+      "users": 2463,
+      "projects": 1306,
+      "instances": {
+        "bgo": 1567,
+        "osl": 1841
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "users": 2464,
+      "projects": 1307,
+      "instances": {
+        "bgo": 1557,
+        "osl": 1846
+      }
+    },
+    {
+      "date": "2026-11-13",
+      "users": 2465,
+      "projects": 1307,
+      "instances": {
+        "bgo": 1559,
+        "osl": 1843
+      }
+    },
+    {
+      "date": "2026-11-14",
+      "users": 2467,
+      "projects": 1308,
+      "instances": {
+        "bgo": 1546,
+        "osl": 1830
+      }
+    },
+    {
+      "date": "2026-11-15",
+      "users": 2468,
+      "projects": 1309,
+      "instances": {
+        "bgo": 1557,
+        "osl": 1832
+      }
+    },
+    {
+      "date": "2026-11-16",
+      "users": 2468,
+      "projects": 1310,
+      "instances": {
+        "bgo": 1555,
+        "osl": 1820
+      }
+    },
+    {
+      "date": "2026-11-17",
+      "users": 2469,
+      "projects": 1310,
+      "instances": {
+        "bgo": 1542,
+        "osl": 1813
+      }
+    },
+    {
+      "date": "2026-11-18",
+      "users": 2472,
+      "projects": 1310,
+      "instances": {
+        "bgo": 1530,
+        "osl": 1821
+      }
+    },
+    {
+      "date": "2026-11-19",
+      "users": 2475,
+      "projects": 1310,
+      "instances": {
+        "bgo": 1542,
+        "osl": 1824
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "users": 2477,
+      "projects": 1311,
+      "instances": {
+        "bgo": 1558,
+        "osl": 1818
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "users": 2480,
+      "projects": 1311,
+      "instances": {
+        "bgo": 1560,
+        "osl": 1825
+      }
+    },
+    {
+      "date": "2026-11-22",
+      "users": 2481,
+      "projects": 1311,
+      "instances": {
+        "bgo": 1564,
+        "osl": 1829
+      }
+    },
+    {
+      "date": "2026-11-23",
+      "users": 2482,
+      "projects": 1312,
+      "instances": {
+        "bgo": 1560,
+        "osl": 1830
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "users": 2484,
+      "projects": 1312,
+      "instances": {
+        "bgo": 1568,
+        "osl": 1840
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "users": 2488,
+      "projects": 1312,
+      "instances": {
+        "bgo": 1567,
+        "osl": 1835
+      }
+    },
+    {
+      "date": "2026-11-26",
+      "users": 2489,
+      "projects": 1312,
+      "instances": {
+        "bgo": 1576,
+        "osl": 1852
+      }
+    }
+  ]
+}

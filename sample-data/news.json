@@ -1,0 +1,132 @@
+{
+  "updated": "2026-11-26T13:45:16.798Z",
+  "source": "https://report.nrec.no/api/v1/status/rss?limit=50&limit_days=730",
+  "items": [
+    {
+      "id": "497",
+      "type": "info",
+      "message": "Fedora 45 is now available as GOLD image. Fedora 43 is retired",
+      "timestamp": "2026-11-17T15:44:16.000Z"
+    },
+    {
+      "id": "495",
+      "type": "info",
+      "message": "Debian 11 GOLD image has been retired",
+      "timestamp": "2026-08-17T10:35:46.000Z"
+    },
+    {
+      "id": "493",
+      "type": "info",
+      "message": "Services will be unavailable on Tuesday, June 18 between 12:00 and 16:00 in BGO and OSL due to maintenance. Running instances will not be affected.",
+      "timestamp": "2026-06-12T13:20:59.000Z"
+    },
+    {
+      "id": "491",
+      "type": "info",
+      "message": "Fedora 44 is now available as a GOLD image",
+      "timestamp": "2026-05-03T15:28:40.000Z"
+    },
+    {
+      "id": "489",
+      "type": "info",
+      "message": "Ubuntu 26.04 LTS is now available as a GOLD image",
+      "timestamp": "2026-04-24T08:40:17.000Z"
+    },
+    {
+      "id": "487",
+      "type": "info",
+      "message": "Fedora 42 GOLD image is now retired",
+      "timestamp": "2026-04-07T10:52:41.000Z"
+    },
+    {
+      "id": "485",
+      "type": "important",
+      "message": "Services will be unavailable on Tuesday, December 9 between 12:00 and 16:00 in BGO and OSL due to maintenance. Running instances will not be affected.",
+      "timestamp": "2025-12-04T05:47:12.000Z"
+    },
+    {
+      "id": "483",
+      "type": "important",
+      "message": "There will be an outage starting at 2025-11-24 12:00 CET, which will last approximately 2 hours. Affected services: Dashboard, Console, DNS",
+      "timestamp": "2025-11-20T13:06:24.000Z"
+    },
+    {
+      "id": "481",
+      "type": "important",
+      "message": "There will be an outage starting at 2025-11-20 12:00 CET, which will last approximately 2 hours. Affected services: Dashboard, DNS",
+      "timestamp": "2025-11-18T11:45:20.000Z"
+    },
+    {
+      "id": "479",
+      "type": "info",
+      "message": "Fedora 43 is now available as a GOLD image",
+      "timestamp": "2025-11-01T08:11:38.000Z"
+    },
+    {
+      "id": "477",
+      "type": "info",
+      "message": "The following GOLD images have been retired: Fedora 41, vGPU Alma Linux 8",
+      "timestamp": "2025-10-01T07:21:45.000Z"
+    },
+    {
+      "id": "475",
+      "type": "info",
+      "message": "There will be an outage starting at 2025-09-09 13:00 CEST, which will last approximately 2 hours. Affected services: Dashboard, DNS and Console",
+      "timestamp": "2025-09-08T08:42:24.000Z"
+    },
+    {
+      "id": "473",
+      "type": "info",
+      "message": "Debian 13 (Trixie) is now available as a GOLD image",
+      "timestamp": "2025-09-01T05:32:50.000Z"
+    },
+    {
+      "id": "471",
+      "type": "info",
+      "message": "Rocky Linux 10 is now available as a GOLD image",
+      "timestamp": "2025-06-19T06:13:46.000Z"
+    },
+    {
+      "id": "469",
+      "type": "info",
+      "message": "New GOLD images Fedora 42 and Alma Linux 10 are available",
+      "timestamp": "2025-06-01T12:20:15.000Z"
+    },
+    {
+      "id": "467",
+      "type": "important",
+      "message": "Services will be unavailable on Wednesday, April 9 between 10:00 and 17:00 in BGO and OSL due to maintenance. Running instances will not be affected.",
+      "timestamp": "2025-04-04T07:59:14.000Z"
+    },
+    {
+      "id": "465",
+      "type": "info",
+      "message": "Ubuntu 20.04 and Fedora 40 are nearing EOL and have been retired as GOLD images",
+      "timestamp": "2025-03-11T08:26:20.000Z"
+    },
+    {
+      "id": "464",
+      "type": "important",
+      "message": "Services will be unavailable on Thursday, February 13 between 11:00 and 17:00 in BGO and OSL due to maintenance. Running instances will not be affected.",
+      "timestamp": "2025-02-07T11:34:17.000Z"
+    },
+    {
+      "id": "462",
+      "type": "info",
+      "message": "CentOS Stream 10 is now available as GOLD image",
+      "timestamp": "2025-01-16T11:24:53.000Z"
+    },
+    {
+      "id": "460",
+      "type": "info",
+      "message": "The NREC Team is pleased to announce the immediate availability of Windows Server 2025 Standard GOLD image. Windows Server 2019 is now retired and no longer available as GOLD image",
+      "timestamp": "2024-12-19T13:01:09.000Z"
+    },
+    {
+      "id": "458",
+      "type": "important",
+      "message": "Services will be unavailable on Wednesday, December 11 between 11:00 and 17:00 in BGO and OSL due to maintenance. Running instances will not be affected.",
+      "timestamp": "2024-12-02T10:03:14.000Z"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "nrec-status",
+  "private": true,
+  "type": "module",
+  "description": "Static status page for NREC, built with GitHub Actions and served from GitHub Pages",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "collect": "node scripts/collect.mjs --data data",
+    "build": "node scripts/build.mjs --data data --out _site",
+    "sample": "node scripts/make-sample.mjs && node scripts/build.mjs --data sample-data --out _site",
+    "serve": "python3 -m http.server 8000 --directory _site"
+  }
+}

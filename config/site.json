@@ -1,0 +1,46 @@
+{
+  "title": "NREC Status",
+  "siteUrl": "https://caleno.github.io/nrec-status/",
+  "timezone": "Europe/Oslo",
+  "endpoints": [
+    {
+      "id": "api",
+      "name": "api.nrec.no",
+      "description": "OpenStack API",
+      "url": "https://api.nrec.no:5000/v3"
+    },
+    {
+      "id": "dashboard",
+      "name": "dashboard.nrec.no",
+      "description": "Web dashboard",
+      "url": "https://dashboard.nrec.no/dashboard/auth/login/"
+    },
+    {
+      "id": "access",
+      "name": "access.nrec.no",
+      "description": "Sign-up and access",
+      "url": "https://access.nrec.no/"
+    },
+    {
+      "id": "docs",
+      "name": "docs.nrec.no",
+      "description": "Documentation",
+      "url": "https://docs.nrec.no/"
+    }
+  ],
+  "checks": {
+    "timeoutMs": 10000,
+    "retries": 1,
+    "keepRecentDays": 7,
+    "keepDailyDays": 90,
+    "staleAfterMinutes": 45
+  },
+  "news": {
+    "rssUrl": "https://report.nrec.no/api/v1/status/rss?limit=50&limit_days=730",
+    "showLatest": 6
+  },
+  "regions": [
+    { "id": "bgo", "name": "Bergen" },
+    { "id": "osl", "name": "Oslo" }
+  ]
+}

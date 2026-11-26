@@ -1,0 +1,256 @@
+/* Status page additions on top of nrec.css (copied from nrec.no). */
+
+:root {
+  --nrec-navy: #1a365d;
+  --nrec-blue: #134f7d;
+  --nrec-steel: #285f88;
+  --nrec-teal: #00c1c1;
+  --nrec-ink: #2d3748;
+  --nrec-muted: #718096;
+  --hairline: #e2e8f0;
+  /* Status colours: always paired with an icon and a label. */
+  --good: #0aac23;
+  --good-text: #006c10;
+  --warning: #fbb315;
+  --serious: #f18a59;
+  --critical: #dc3c3d;
+  --critical-text: #b42324;
+  --nodata: #dfe5ec;
+}
+
+/* ---- hero --------------------------------------------------------------- */
+.status-hero {
+  padding: 120px 0 3rem !important;
+}
+.status-hero h1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+.overall {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--nrec-ink);
+  font-weight: 600;
+  font-size: 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.overall i { font-size: 1.3rem; }
+.overall-up i { color: var(--good); }
+.overall-partial i { color: var(--serious); }
+.overall-down i { color: var(--critical); }
+.overall-unknown i { color: var(--nrec-muted); }
+.hero-meta {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+}
+.stale-warning {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: var(--warning);
+  color: #0b0b0b;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* ---- sections ----------------------------------------------------------- */
+main .section { padding: 3.5rem 0; }
+main h2 { margin-top: 0; font-size: 2rem; }
+#news.section { padding: 3.5rem 0; }
+
+/* ---- endpoint cards ------------------------------------------------------ */
+.endpoint { padding: 1.5rem; }
+.endpoint-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.endpoint-name {
+  font-size: 1.15rem;
+  margin: 0;
+  font-weight: 600;
+}
+.endpoint-name a { color: var(--nrec-navy); text-decoration: none; }
+.endpoint-name a:hover { text-decoration: underline; }
+.endpoint-desc { color: var(--nrec-muted); font-size: 0.9rem; }
+.status-chip {
+  white-space: nowrap;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.status-up { color: var(--good-text); }
+.status-down { color: var(--critical-text); }
+.status-unknown { color: var(--nrec-muted); }
+.endpoint-down { box-shadow: 0 0 0 2px var(--critical), 0 1px 3px rgba(0, 0, 0, 0.1); }
+
+.uptime {
+  display: flex;
+  gap: 2px;
+  height: 32px;
+}
+.bar {
+  flex: 1;
+  min-width: 2px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.uptime .bar:hover { opacity: 0.7; }
+.bar-good { background: var(--good); }
+.bar-warning { background: var(--warning); }
+.bar-critical { background: var(--critical); }
+.bar-nodata { background: var(--nodata); }
+.endpoint-foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--nrec-muted);
+}
+.endpoint-foot strong { color: var(--nrec-ink); }
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--nrec-muted);
+}
+.legend .bar {
+  width: 10px;
+  height: 14px;
+  vertical-align: -2px;
+  margin-right: 0.3rem;
+}
+
+/* ---- news --------------------------------------------------------------- */
+.news-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+.news-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid var(--nrec-steel);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.9rem;
+}
+.news-important { border-left-color: var(--serious); }
+.news-event { border-left-color: var(--nrec-teal); }
+.news-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.85rem;
+  color: var(--nrec-muted);
+  margin-bottom: 0.25rem;
+}
+.news-type { font-weight: 600; color: var(--nrec-ink); }
+.news-important .news-type i { color: #c25e2c; }
+.news-info .news-type i { color: var(--nrec-steel); }
+.news-event .news-type i { color: #008a8a; }
+.news-text { margin: 0; color: var(--nrec-ink); }
+.news-older summary {
+  cursor: pointer;
+  color: var(--nrec-steel);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+.notice {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: #fff7e0;
+  border: 1px solid var(--warning);
+  font-size: 0.95rem;
+}
+
+/* ---- usage tiles -------------------------------------------------------- */
+.tile { padding: 1.5rem; }
+.tile-head { margin-bottom: 1rem; }
+.tile-label { color: var(--nrec-muted); font-weight: 500; }
+.tile-value {
+  font-size: 2.5rem;
+  font-weight: 650;
+  color: var(--nrec-navy);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.tile-delta, .tile-breakdown { font-size: 0.9rem; color: var(--nrec-ink); }
+.tile-breakdown { color: var(--nrec-muted); }
+.tile-breakdown strong { color: var(--nrec-ink); }
+.spark {
+  position: relative;
+  height: 48px;
+  margin-top: auto; /* align sparklines across tiles of different height */
+  cursor: crosshair;
+}
+.spark svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.spark-line { fill: none; stroke: #8fa9c4; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.spark-cursor { stroke: #c2c2c2; stroke-width: 1; opacity: 0; }
+.spark.active .spark-cursor { opacity: 1; }
+.spark-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--nrec-blue);
+  box-shadow: 0 0 0 2px #fff;
+  pointer-events: none;
+}
+.spark-hover { display: none; }
+.spark.active .spark-hover { display: block; }
+.tile-table { margin-top: 0.75rem; font-size: 0.85rem; }
+.tile-table summary { cursor: pointer; color: var(--nrec-steel); }
+.table-wrap { max-height: 240px; overflow-y: auto; margin-top: 0.5rem; }
+.tile-table td:last-child, .tile-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sample-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: #e8a33d;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---- tooltip ------------------------------------------------------------ */
+.tip {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: none;
+  background: #1a202c;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 10px));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- footer ------------------------------------------------------------- */
+.footer_custom { padding: 2rem 0 1rem; }
+.footer_custom a { color: rgba(255, 255, 255, 0.9); text-decoration: none; }
+.footer_custom a:hover { color: #fff; }
+
+@media (max-width: 576px) {
+  .status-hero { padding-top: 100px !important; }
+  .status-hero h1 { font-size: 2rem; }
+  .overall { font-size: 1rem; }
+  main h2 { font-size: 1.6rem; }
+  .endpoint-head { flex-direction: column; gap: 0.25rem; }
+  .uptime { height: 26px; gap: 1px; }
+  .tile-value { font-size: 2rem; }
+}
