@@ -65,7 +65,8 @@ function endpointCard(ep, tz) {
     detail = h(l.error || (l.code ? `HTTP ${l.code}` : 'Down'));
     if (l.since) detail += ` since ${fmt(tz, l.since, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`;
   }
-  const href = ep.url ? ep.url.replace(/:\d+\/.*$/, '/') : null;
+  // Link to web services only; an API address on its own port isn't useful to click.
+  const href = ep.url && !/^https?:\/\/[^/]+:\d+/.test(ep.url) ? ep.url : null;
   const name = href ? `<a href="${h(href)}" rel="noopener noreferrer">${h(ep.name)}</a>` : h(ep.name);
   const source = ep.source === 'uptimerobot'
     ? `UptimeRobot${ep.interval ? `, every ${Math.round(ep.interval / 60)} min` : ''}`

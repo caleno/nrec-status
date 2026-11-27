@@ -52,6 +52,12 @@ api-osl=m987654321-...
 # dashboard=...
 ```
 
+> **Keep these keys secret.** Despite UptimeRobot's documentation, a
+> monitor-specific key can also read the account's alert contacts (including
+> Teams webhook URLs, emails and phone numbers), status pages and maintenance
+> windows. Never put a key in `config/site.json` or the page; the build stops
+> if it finds one there.
+
 - Names are matched to endpoint ids, ignoring case; `_` and spaces count as `-`.
 - A key whose name matches no endpoint is still shown, under its UptimeRobot
   monitor name, until you add it to the config.

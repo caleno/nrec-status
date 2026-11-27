@@ -11,8 +11,7 @@
       "description": "OpenStack API",
       "region": "bgo",
       "impact": "core",
-      "url": "https://api.nrec.no:5000/v3",
-      "uptimerobotKey": "m801569145-88e9900e7ad848eafc603aec"
+      "url": "https://identity.api.bgo.nrec.no:5000/"
     },
     {
       "id": "api-osl",
@@ -21,33 +20,28 @@
       "description": "OpenStack API",
       "region": "osl",
       "impact": "core",
-      "url": "https://api.nrec.no:5000/v3",
-      "uptimerobotKey": "m801569193-cc66328928a943537688199e"
-
+      "url": "https://identity.api.osl.nrec.no:5000/"
     },
     {
       "id": "dashboard",
       "name": "dashboard.nrec.no",
       "description": "Web dashboard",
       "impact": "core",
-      "url": "https://dashboard.nrec.no/dashboard/auth/login/",
-      "uptimerobotKey": "m804828037-d221335038b0d4c052a335d2"
+      "url": "https://dashboard.nrec.no/dashboard/auth/login/"
     },
     {
       "id": "access",
       "name": "access.nrec.no",
       "description": "Sign-up and access",
       "impact": "minor",
-      "url": "https://access.nrec.no/",
-      "uptimerobotKey": "m804828067-daf158848f0e18219de94ed2"
+      "url": "https://access.nrec.no/"
     },
     {
       "id": "docs",
       "name": "docs.nrec.no",
       "description": "Documentation",
       "impact": "minor",
-      "url": "https://docs.nrec.no/",
-      "uptimerobotKey": "m804828071-7b4755dc59e4c2c47eb160f7"
+      "url": "https://docs.nrec.no/"
     }
   ],
   "checks": {
