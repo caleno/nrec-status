@@ -11,7 +11,7 @@
       "description": "OpenStack API",
       "region": "bgo",
       "impact": "core",
-      "url": "https://api.nrec.no:5000/v3"
+      "url": "https://identity.api.bgo.nrec.no:5000/"
     },
     {
       "id": "api-osl",
@@ -19,7 +19,8 @@
       "name": "API",
       "description": "OpenStack API",
       "region": "osl",
-      "impact": "core"
+      "impact": "core",
+      "url": "https://identity.api.osl.nrec.no:5000/"
     },
     {
       "id": "dashboard",
