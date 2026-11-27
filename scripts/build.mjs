@@ -24,6 +24,14 @@ const outDir = resolve(args.out || '_site');
 const config = await loadConfig();
 const now = new Date();
 
+// UptimeRobot keys (including monitor-specific ones) can read account-wide
+// alert contacts, so they belong in the UPTIMEROBOT_MONITOR_KEYS secret and
+// never in published files.
+if (/"[a-z]?\d{6,}-[A-Za-z0-9]{10,}"/.test(JSON.stringify(config)) || config.endpoints.some((e) => 'uptimerobotKey' in e)) {
+  console.error('config/site.json seems to contain an UptimeRobot API key. Remove it, regenerate the key, and put it in the UPTIMEROBOT_MONITOR_KEYS secret instead.');
+  process.exit(1);
+}
+
 const checks = await readJson(join(dataDir, 'checks.json'), { endpoints: {} });
 const news = await readJson(join(dataDir, 'news.json'), { items: [] });
 const metrics = await readJson(join(dataDir, 'metrics.json'), null);
