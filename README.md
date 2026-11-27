@@ -13,27 +13,58 @@ It shows:
 
 - **Services**: the four public endpoints, checked from outside NREC every
   15 minutes, with 90 days of daily uptime.
-- **News & issues**: messages from report.nrec.no (its RSS feed).
+- **Active now**: ongoing incidents and current or planned maintenance.
+- **News & issues**: messages from three sources, merged by date:
+  report.nrec.no, files in [`messages/`](messages/), and GitHub issues.
 - **Usage**: instances per region, projects and users. These are
   **sample numbers** until a real source is connected.
 
-It also publishes `status.json` (a summary other sites can read) and a
+It also publishes `feed.xml` (RSS of all messages), `status.json` (a summary
+other sites can read) and a
 [shields.io endpoint badge](https://shields.io/badges/endpoint-badge) per
 endpoint under `badges/`, used at the top of this README.
+
+## Publishing news, maintenance and incidents
+
+There are three ways, and they can be mixed. All support Markdown, links and
+emoji (typed 🎉 or as `:tada:` shortcodes).
+
+| | Best for | How |
+|---|---|---|
+| **GitHub issue** | Incidents that get updates; maintenance | [New issue](../../issues/new/choose) → *Status incident*, *Planned maintenance* or *News*. Each comment becomes an update; closing the issue resolves it. Published within a minute or two. |
+| **File in `messages/`** | News, planned maintenance, anything you want reviewed in a pull request | Add a `.md` or `.txt` file with a small header. See [`messages/README.md`](messages/README.md) and the `_template-*.md` files. Published when merged to `main`. |
+| **report.nrec.no** | The existing tool | Unchanged; its messages are read from its RSS feed every 15 minutes. |
+
+Issues are published only when they have one of the labels `incident`,
+`maintenance` or `news` **and** were written by someone with write access to
+the repository (owner, member or collaborator, or a user listed in
+`issues.trustedUsers` in `config/site.json`). The same applies to each comment.
+Anyone else can still open issues; they just don't appear on the page.
+Raw HTML in issues is shown as text, and only http(s) and mailto links are kept.
+
+Incidents and maintenance get a phase from their dates and state:
+*Ongoing* / *Resolved* for incidents, *Scheduled* / *In progress* /
+*Completed* for maintenance. Everything that isn't finished is shown under
+**Active now**, and an ongoing incident or maintenance changes the headline
+at the top when all checks are green.
 
 ## How it works
 
 ```
-GitHub Actions, every 15 min and on push to main
+GitHub Actions: every 15 min, on push to main, on issue changes
   ├─ check api / dashboard / access / docs .nrec.no  ─┐
   ├─ fetch report.nrec.no/api/v1/status/rss           ├─► data branch (JSON)
-  └─ build static HTML from the data ─────────────────┴─► GitHub Pages
+  ├─ fetch labelled GitHub issues and comments       ─┘
+  └─ build static HTML from the data + messages/ ─────► GitHub Pages
 ```
 
 - `config/site.json`: endpoints to check, news feed URL, regions, thresholds.
-- `scripts/collect.mjs`: runs the checks and fetches news into a data directory.
-  A failed news fetch keeps the last good copy.
-- `scripts/build.mjs` + `src/page.mjs`: render the page, badges and `status.json`.
+- `scripts/collect.mjs`: runs the checks and fetches news and issues into a
+  data directory. A failed fetch keeps the last good copy.
+- `scripts/lib/messages.mjs`: turns all three sources into one kind of message
+  (Markdown, issue forms, dates, phases).
+- `scripts/build.mjs` + `src/page.mjs`: render the page, feed, badges and `status.json`.
+- `messages/`: message files. `.github/ISSUE_TEMPLATE/`: the issue forms.
 - `assets/`: Bootstrap, `nrec.css` and the logo are copied from
   [norcams.github.io](https://github.com/norcams/norcams.github.io);
   `status.css` and `status.js` are this site's additions.
@@ -41,11 +72,16 @@ GitHub Actions, every 15 min and on push to main
   run, so history doesn't grow; the JSON keeps 7 days of raw checks and 90 days
   of daily totals.
 
-No dependencies besides Node 22.
+Needs Node 22. Dependencies: `marked` (Markdown) and `node-emoji`.
 
 ## Run it locally
 
-Build from sample data (no network needed):
+Build from sample data (no network needed). It includes example issues and
+files, dated relative to today, so every kind of message shows up:
+
+```bash
+npm install
+```
 
 ```bash
 npm run sample && npm run serve
@@ -94,9 +130,8 @@ and the page labels the numbers "Sample data".
 - **Metrics source**: a public, aggregate-only `/stats` endpoint on
   report.nrec.no would let the workflow fetch metrics like it fetches news,
   with no internal cron job.
-- **Richer messages** (emoji, links, formatting, maintenance windows with
-  start/end and affected regions): could move to Markdown files in this repo
-  or GitHub Issues. Plain messages with emoji and links already render.
+- **Which source to keep**: files and issues both work now. Running all
+  three long term means three places to look; picking one or two is simpler.
 - **report.nrec.no JSON API**: `GET /api/v1/status` returns HTTP 500 because
   the response (a list) doesn't match its OpenAPI spec (an object), so this
   site reads the RSS feed instead.

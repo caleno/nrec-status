@@ -1,0 +1,16 @@
+name: News
+description: Publish a news item on the status page (NREC staff only)
+labels: [news]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The issue title is the headline and the text below is the message.
+        Markdown and emoji :tada: work. Only issues by repository members are
+        published. Remove the `news` label to unpublish.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Message
+    validations:
+      required: true

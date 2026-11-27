@@ -7,9 +7,15 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Publish incidents, maintenance and news as soon as an issue changes.
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
 
 permissions:
   contents: write   # push collected data to the `data` branch
+  issues: write     # read issues; create the incident/maintenance/news labels
   pages: write
   id-token: write
 
@@ -27,6 +33,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The issue forms apply these labels; make sure they exist.
+      - name: Create status labels
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          gh label create incident    --force --color d73a4a --description "Published on the status page as an incident"
+          gh label create maintenance --force --color 134f7d --description "Published on the status page as maintenance"
+          gh label create news        --force --color 00c1c1 --description "Published on the status page as news"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Collected data lives on its own branch so main only holds code and
       # the history of check results doesn't clutter it. The branch is
@@ -39,8 +58,10 @@ jobs:
             git archive FETCH_HEAD | tar -x -C data
           fi
 
-      - name: Collect checks and news
+      - name: Collect checks, news and issues
         run: node scripts/collect.mjs --data data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save data to the data branch
         run: |

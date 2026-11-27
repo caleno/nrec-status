@@ -1,0 +1,10 @@
+---
+title: Christmas support hours
+type: info
+date: 2026-11-23
+---
+
+Support will be limited between 23 December and 2 January. :christmas_tree:
+Urgent problems can still be reported to support@nrec.no and we will respond as soon as we can.
+
+More at https://docs.nrec.no

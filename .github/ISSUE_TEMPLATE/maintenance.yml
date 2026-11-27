@@ -1,0 +1,55 @@
+name: Planned maintenance
+description: Announce maintenance on the status page (NREC staff only)
+title: "Maintenance: "
+labels: [maintenance]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Shown as *Scheduled* until the start time, *In progress* during the
+        window and *Completed* after the end time (or when the issue is
+        closed). Comments become updates. Only issues and comments by
+        repository members are published.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      placeholder: Services will be unavailable between 12:00 and 16:00. Running instances will not be affected.
+    validations:
+      required: true
+  - type: input
+    id: start
+    attributes:
+      label: Start
+      description: Oslo time, YYYY-MM-DD HH:MM
+      placeholder: 2026-12-09 12:00
+    validations:
+      required: true
+  - type: input
+    id: end
+    attributes:
+      label: End
+      description: Oslo time, YYYY-MM-DD HH:MM
+      placeholder: 2026-12-09 16:00
+    validations:
+      required: true
+  - type: checkboxes
+    id: regions
+    attributes:
+      label: Regions
+      options:
+        - label: Bergen (BGO)
+        - label: Oslo (OSL)
+  - type: checkboxes
+    id: services
+    attributes:
+      label: Services
+      options:
+        - label: Compute
+        - label: Block storage
+        - label: Object storage
+        - label: Network
+        - label: DNS
+        - label: Dashboard
+        - label: API
+        - label: Access
