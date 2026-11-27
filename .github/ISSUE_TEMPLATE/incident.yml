@@ -1,0 +1,46 @@
+name: Status incident
+description: Report an ongoing incident on the status page (NREC staff only)
+title: "Incident: "
+labels: [incident]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is published on the status page as soon as it is saved. Each
+        comment you add becomes an **update**. Close the issue when the
+        incident is resolved. Markdown and emoji :rotating_light: work.
+        Only issues and comments by repository members are published.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What users notice and what they should do.
+      placeholder: We are investigating problems starting new instances in Oslo.
+    validations:
+      required: true
+  - type: checkboxes
+    id: regions
+    attributes:
+      label: Regions
+      options:
+        - label: Bergen (BGO)
+        - label: Oslo (OSL)
+  - type: checkboxes
+    id: services
+    attributes:
+      label: Services
+      options:
+        - label: Compute
+        - label: Block storage
+        - label: Object storage
+        - label: Network
+        - label: DNS
+        - label: Dashboard
+        - label: API
+        - label: Access
+  - type: input
+    id: start
+    attributes:
+      label: Start
+      description: When it started, Oslo time (YYYY-MM-DD HH:MM). Leave empty to use the time the issue was opened.
+      placeholder: 2026-12-01 09:40

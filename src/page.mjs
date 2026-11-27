@@ -7,13 +7,25 @@ const STATUS = {
   up: { label: 'Operational', icon: 'fa-circle-check' },
   down: { label: 'Not responding', icon: 'fa-circle-xmark' },
   partial: { label: 'Partial outage', icon: 'fa-triangle-exclamation' },
+  maintenance: { label: 'Maintenance', icon: 'fa-screwdriver-wrench' },
   unknown: { label: 'No data', icon: 'fa-circle-question' },
 };
 
 const MESSAGE_TYPES = {
+  incident: { label: 'Incident', icon: 'fa-bolt' },
+  maintenance: { label: 'Maintenance', icon: 'fa-screwdriver-wrench' },
   important: { label: 'Important', icon: 'fa-triangle-exclamation' },
+  news: { label: 'News', icon: 'fa-newspaper' },
   event: { label: 'Event', icon: 'fa-calendar-days' },
   info: { label: 'Info', icon: 'fa-circle-info' },
+};
+
+const PHASES = {
+  ongoing: 'Ongoing',
+  resolved: 'Resolved',
+  scheduled: 'Scheduled',
+  'in-progress': 'In progress',
+  completed: 'Completed',
 };
 
 const num = new Intl.NumberFormat('en-GB');
@@ -22,12 +34,6 @@ function fmt(tz, date, opts) {
   return new Intl.DateTimeFormat('en-GB', { timeZone: tz, ...opts }).format(new Date(date));
 }
 
-/** Escape, then turn bare URLs into links and newlines into <br>. Emoji pass through. */
-function richText(s) {
-  return h(s)
-    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, (u) => `<a href="${u}" rel="noopener noreferrer">${u}</a>`)
-    .replace(/\n/g, '<br>');
-}
 
 function uptimeClass(pct) {
   if (pct === null) return 'nodata';
@@ -78,18 +84,65 @@ function endpointCard(ep, tz) {
         </div>`;
 }
 
-function newsItem(item, tz) {
-  const t = MESSAGE_TYPES[item.type] || MESSAGE_TYPES.info;
-  const date = item.timestamp
-    ? `<time datetime="${h(item.timestamp)}">${fmt(tz, item.timestamp, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</time>`
-    : '';
+const anchor = (m) => m.id.replace(/[^\w-]/g, '-');
+
+function timeWindow(m, tz) {
+  if (!m.start) return '';
+  const day = { weekday: 'short', day: 'numeric', month: 'short' };
+  const clock = { hour: '2-digit', minute: '2-digit' };
+  const from = fmt(tz, m.start, { ...day, ...clock });
+  let to = '';
+  if (m.end) {
+    const sameDay = fmt(tz, m.start, day) === fmt(tz, m.end, day);
+    to = ` – ${fmt(tz, m.end, sameDay ? { ...clock, timeZoneName: 'short' } : { ...day, ...clock, timeZoneName: 'short' })}`;
+  } else {
+    to = m.type === 'incident' ? ' – now' : '';
+  }
+  return `<div class="news-window"><i class="fas fa-clock" aria-hidden="true"></i> ${from}${to}</div>`;
+}
+
+function scope(m, config) {
+  const names = (ids, list) => ids.map((id) => list.find((x) => x.id === id)?.name || id);
+  const parts = [];
+  if (m.regions.length) parts.push(`<span><i class="fas fa-location-dot" aria-hidden="true"></i> ${h(names(m.regions, config.regions).join(', '))}</span>`);
+  if (m.services.length) parts.push(`<span><i class="fas fa-server" aria-hidden="true"></i> ${h(names(m.services, config.services).join(', '))}</span>`);
+  return parts.length ? `<div class="news-scope">${parts.join('')}</div>` : '';
+}
+
+function sourceLink(m) {
+  if (m.source === 'issue') return `<a class="news-source" href="${h(m.url)}" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Issue #${m.number}</a>`;
+  if (m.source === 'file') return m.url ? `<a class="news-source" href="${h(m.url)}" rel="noopener noreferrer"><i class="fas fa-file-lines" aria-hidden="true"></i> File</a>` : '<span class="news-source"><i class="fas fa-file-lines" aria-hidden="true"></i> File</span>';
+  return '<span class="news-source">report.nrec.no</span>';
+}
+
+function updatesList(m, tz, open) {
+  if (!m.updates.length) return '';
+  const items = [...m.updates].reverse().map((u) => `
+              <li><time datetime="${h(u.timestamp)}">${fmt(tz, u.timestamp, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</time><div class="md">${u.html}</div></li>`).join('');
+  const n = m.updates.length;
+  return `<details class="news-updates"${open ? ' open' : ''}>
+              <summary>${n} update${n > 1 ? 's' : ''}</summary>
+              <ol>${items}
+              </ol>
+            </details>`;
+}
+
+function messageItem(m, tz, config, { active = false } = {}) {
+  const t = MESSAGE_TYPES[m.type] || MESSAGE_TYPES.info;
+  const phase = m.phase ? `<span class="phase phase-${m.phase}">${PHASES[m.phase]}</span>` : '';
   return `
-          <li class="news-item news-${h(item.type)}">
+          <li class="news-item news-${h(m.type)}"${active ? '' : ` id="${anchor(m)}"`}>
             <div class="news-meta">
               <span class="news-type"><i class="fas ${t.icon}" aria-hidden="true"></i> ${t.label}</span>
-              ${date}
+              ${phase}
+              <time datetime="${h(m.timestamp)}">${fmt(tz, m.timestamp, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</time>
+              ${sourceLink(m)}
             </div>
-            <p class="news-text">${richText(item.message)}</p>
+            ${m.title ? `<h3 class="news-title">${h(m.title)}</h3>` : ''}
+            ${timeWindow(m, tz)}
+            ${scope(m, config)}
+            <div class="md news-text">${m.html}</div>
+            ${updatesList(m, tz, active)}
           </li>`;
 }
 
@@ -139,9 +192,9 @@ function usageTile(tile, tz) {
           </div>`;
 }
 
-export function renderPage({ config, now, checksUpdated, endpoints, overall, news, usage }) {
+export function renderPage({ config, now, checksUpdated, endpoints, overall, messages, active, sourceErrors, usage }) {
   const tz = config.timezone;
-  const items = news.items || [];
+  const items = messages;
   const latest = items.slice(0, config.news.showLatest);
   const older = items.slice(config.news.showLatest);
   const ov = STATUS[overall.level];
@@ -160,7 +213,7 @@ export function renderPage({ config, now, checksUpdated, endpoints, overall, new
   <meta property="og:description" content="${h(overall.text)}">
   <meta property="og:image" content="https://nrec.no/assets/img/nrec-horizontal_dark.svg">
   <link rel="icon" href="assets/img/favicon.ico">
-  <link rel="alternate" type="application/rss+xml" title="NREC status messages" href="${h(config.news.rssUrl)}">
+  <link rel="alternate" type="application/rss+xml" title="NREC status messages" href="feed.xml">
   <link rel="stylesheet" href="assets/vendor/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/nrec.css">
   <link rel="stylesheet" href="assets/css/status.css">
@@ -180,6 +233,7 @@ export function renderPage({ config, now, checksUpdated, endpoints, overall, new
       </button>
       <div class="collapse navbar-collapse text-center" id="nav">
         <ul class="navbar-nav me-auto">
+          ${active.length ? '<li class="nav-item mx-2"><a class="nav-link" href="#active">Active now</a></li>' : ''}
           <li class="nav-item mx-2"><a class="nav-link" href="#services">Services</a></li>
           <li class="nav-item mx-2"><a class="nav-link" href="#news">News &amp; issues</a></li>
           ${usage ? '<li class="nav-item mx-2"><a class="nav-link" href="#usage">Usage</a></li>' : ''}
@@ -209,6 +263,16 @@ export function renderPage({ config, now, checksUpdated, endpoints, overall, new
   </header>
 
   <main>
+${active.length ? `
+    <section id="active" class="container">
+      <div class="section">
+        <h2>Active now</h2>
+        <p class="text-muted">Ongoing incidents and current or planned maintenance.</p>
+        <ul class="news-list">${active.map((m) => messageItem(m, tz, config, { active: true })).join('')}
+        </ul>
+      </div>
+    </section>
+` : ''}
     <section id="services" class="container">
       <div class="section">
         <h2>Services</h2>
@@ -229,14 +293,14 @@ export function renderPage({ config, now, checksUpdated, endpoints, overall, new
         <h2>News &amp; issues</h2>
         <p class="text-muted">
           Announcements, maintenance and incidents.
-          <a href="${h(config.news.rssUrl)}"><i class="fas fa-rss" aria-hidden="true"></i> Subscribe via RSS</a>
+          <a href="feed.xml"><i class="fas fa-rss" aria-hidden="true"></i> Subscribe via RSS</a>
         </p>
-        ${news.lastError ? `<div class="notice"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Could not fetch new messages at ${fmt(tz, news.lastError.t, { hour: '2-digit', minute: '2-digit' })}. Showing the last saved copy.</div>` : ''}
-        ${items.length ? `<ul class="news-list">${latest.map((i) => newsItem(i, tz)).join('')}
+        ${sourceErrors.map((e) => `<div class="notice"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Could not fetch messages from ${h(e.source)} at ${fmt(tz, e.t, { hour: '2-digit', minute: '2-digit' })}. Showing the last saved copy.</div>`).join('')}
+        ${items.length ? `<ul class="news-list">${latest.map((m) => messageItem(m, tz, config)).join('')}
         </ul>` : '<p>No messages.</p>'}
         ${older.length ? `<details class="news-older">
           <summary>Older messages (${older.length})</summary>
-          <ul class="news-list">${older.map((i) => newsItem(i, tz)).join('')}
+          <ul class="news-list">${older.map((m) => messageItem(m, tz, config)).join('')}
           </ul>
         </details>` : ''}
       </div>
@@ -265,7 +329,8 @@ ${usage ? `
         </div>
         <ul class="footer-menu list-unstyled d-flex flex-row flex-wrap gap-3 justify-content-center justify-content-md-end mb-0">
           <li><a href="status.json">status.json</a></li>
-          <li><a href="${h(config.news.rssUrl)}">RSS</a></li>
+          <li><a href="feed.xml">RSS</a></li>
+          <li><a href="https://github.com/${h(config.repo)}" rel="noopener noreferrer">GitHub</a></li>
           <li><a href="https://docs.nrec.no/terms-of-service.html" rel="noopener noreferrer">Terms of Use</a></li>
         </ul>
       </div>

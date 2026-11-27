@@ -1,6 +1,7 @@
 {
   "title": "NREC Status",
   "siteUrl": "https://caleno.github.io/nrec-status/",
+  "repo": "caleno/nrec-status",
   "timezone": "Europe/Oslo",
   "endpoints": [
     {
@@ -37,10 +38,67 @@
   },
   "news": {
     "rssUrl": "https://report.nrec.no/api/v1/status/rss?limit=50&limit_days=730",
-    "showLatest": 6
+    "showLatest": 8
+  },
+  "messages": {
+    "dir": "messages"
+  },
+  "issues": {
+    "labels": {
+      "incident": "incident",
+      "maintenance": "maintenance",
+      "news": "news"
+    },
+    "trustedAssociations": [
+      "OWNER",
+      "MEMBER",
+      "COLLABORATOR"
+    ],
+    "trustedUsers": [],
+    "maxAgeDays": 365
   },
   "regions": [
-    { "id": "bgo", "name": "Bergen" },
-    { "id": "osl", "name": "Oslo" }
+    {
+      "id": "bgo",
+      "name": "Bergen"
+    },
+    {
+      "id": "osl",
+      "name": "Oslo"
+    }
+  ],
+  "services": [
+    {
+      "id": "compute",
+      "name": "Compute"
+    },
+    {
+      "id": "block-storage",
+      "name": "Block storage"
+    },
+    {
+      "id": "object-storage",
+      "name": "Object storage"
+    },
+    {
+      "id": "network",
+      "name": "Network"
+    },
+    {
+      "id": "dns",
+      "name": "DNS"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard"
+    },
+    {
+      "id": "api",
+      "name": "API"
+    },
+    {
+      "id": "access",
+      "name": "Access"
+    }
   ]
 }
