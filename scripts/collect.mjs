@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Collects status data into a data directory:
-//   checks.json  - outside-in availability checks of the public endpoints
+//   checks.json  - service status: UptimeRobot monitors (UPTIMEROBOT_MONITOR_KEYS)
+//                  with our own outside-in checks as the fallback
 //   news.json    - status messages from report.nrec.no
 //   issues.json  - GitHub issues labelled incident / maintenance / news
 //
@@ -13,6 +14,7 @@
 import { join } from 'node:path';
 import { loadConfig, readJson, writeJson, parseArgs, dayKey } from './lib/util.mjs';
 import { parseRss } from './lib/rss.mjs';
+import { parseKeys, keyName, fetchMonitor } from './lib/uptimerobot.mjs';
 
 const args = parseArgs();
 const dataDir = args.data || 'data';
@@ -47,28 +49,63 @@ async function collectChecks() {
   const recentCutoff = now.getTime() - keepRecentDays * 864e5;
   const dailyCutoff = dayKey(now.getTime() - keepDailyDays * 864e5);
 
-  const results = await Promise.all(config.endpoints.map(async (ep) => {
+  // 1. UptimeRobot, one call per monitor key. The free plan allows 10
+  //    requests a minute, so space the calls out when there are many.
+  const keys = parseKeys(process.env.UPTIMEROBOT_MONITOR_KEYS);
+  const fromUr = new Map();
+  if (keys.length) console.log(`uptimerobot: ${keys.length} monitor keys: ${keys.map(([n]) => n).join(', ')}`);
+  for (const [i, [name, key]] of keys.entries()) {
+    if (i && keys.length > 8) await new Promise((r) => setTimeout(r, 6500));
+    try {
+      fromUr.set(name, await fetchMonitor(key, { days: keepDailyDays, now }));
+    } catch (err) {
+      console.warn(`uptimerobot: ${name}: ${err.message}`);
+    }
+  }
+
+  // 2. Our own checks, for endpoints UptimeRobot didn't cover this run.
+  const configured = new Set(config.endpoints.map((ep) => ep.id));
+  const toProbe = config.endpoints.filter((ep) => !fromUr.has(keyName(ep.uptimerobot || ep.id)) && ep.url);
+  const probed = new Map(await Promise.all(toProbe.map(async (ep) => {
     let r = await probe(ep.url, timeoutMs);
     // Retry once before declaring an endpoint down, to avoid flapping on
     // a single dropped connection.
     for (let i = 0; i < retries && !r.ok; i++) r = await probe(ep.url, timeoutMs);
     return [ep.id, r];
-  }));
+  })));
 
   const endpoints = {};
-  for (const [id, r] of results) {
-    const e = prev.endpoints[id] || { recent: [], daily: {} };
-    e.latest = { t, ...r };
-    e.recent = [...(e.recent || []), [t, r.ok ? 1 : 0, r.ms, r.code]]
-      .filter(([ts]) => Date.parse(ts) >= recentCutoff);
-    const day = dayKey(now);
-    const [up, total] = e.daily?.[day] || [0, 0];
-    e.daily = { ...(e.daily || {}), [day]: [up + (r.ok ? 1 : 0), total + 1] };
-    e.daily = Object.fromEntries(Object.entries(e.daily).filter(([d]) => d >= dailyCutoff));
+  const ids = [...config.endpoints.map((ep) => [ep.id, keyName(ep.uptimerobot || ep.id)]),
+    // Monitor keys that match no endpoint in the config still get shown.
+    ...[...fromUr.keys()].filter((n) => !config.endpoints.some((ep) => keyName(ep.uptimerobot || ep.id) === n)).map((n) => [n, n])];
+  for (const [id, urName] of ids) {
+    const e = { recent: [], daily: {}, ...prev.endpoints[id] };
+    const ur = fromUr.get(urName);
+    const r = probed.get(id);
+    if (ur) {
+      Object.assign(e, ur);
+      if (!configured.has(id)) e.auto = true;
+      log(id, 'uptimerobot', ur.latest.state, ur.latest.ms, ur.latest.error);
+    } else if (r) {
+      e.source = 'probe';
+      e.latest = { t, state: r.ok ? 'up' : 'down', ...r };
+      e.recent = [...e.recent, [t, r.ok ? 1 : 0, r.ms, r.code]].filter(([ts]) => Date.parse(ts) >= recentCutoff);
+      const day = dayKey(now);
+      const [up, total] = e.daily[day] || [0, 0];
+      e.daily = { ...e.daily, [day]: [up + (r.ok ? 1 : 0), total + 1] };
+      log(id, 'probe', r.ok ? 'up' : 'down', r.ms, r.error || (r.ok ? '' : `HTTP ${r.code}`));
+    } else if (!prev.endpoints[id]) {
+      continue; // no key, no URL, no history: nothing to show yet
+    }
+    e.daily = Object.fromEntries(Object.entries(e.daily || {}).filter(([d]) => d >= dailyCutoff));
+    if (e.dailyPct) e.dailyPct = Object.fromEntries(Object.entries(e.dailyPct).filter(([d]) => d >= dailyCutoff));
     endpoints[id] = e;
-    console.log(`check ${id.padEnd(10)} ${r.ok ? 'UP  ' : 'DOWN'} ${String(r.code).padStart(3)} ${r.ms} ms${r.error ? ' ' + r.error : ''}`);
   }
   await writeJson(path, { updated: t, endpoints }, false);
+}
+
+function log(id, source, state, ms, extra) {
+  console.log(`check ${id.padEnd(12)} ${source.padEnd(11)} ${state.toUpperCase().padEnd(7)} ${ms ?? '-'} ms${extra ? ' ' + extra : ''}`);
 }
 
 async function collectNews() {

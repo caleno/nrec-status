@@ -8,6 +8,8 @@ const STATUS = {
   down: { label: 'Not responding', icon: 'fa-circle-xmark' },
   partial: { label: 'Partial outage', icon: 'fa-triangle-exclamation' },
   maintenance: { label: 'Maintenance', icon: 'fa-screwdriver-wrench' },
+  minor: { label: 'Minor issue', icon: 'fa-circle-info' },
+  paused: { label: 'Paused', icon: 'fa-circle-pause' },
   unknown: { label: 'No data', icon: 'fa-circle-question' },
 };
 
@@ -50,38 +52,64 @@ function uptimeText(pct) {
 function endpointCard(ep, tz) {
   const s = STATUS[ep.status];
   const bars = ep.days.map((d) => {
+    const day = fmt(tz, d.date, { day: 'numeric', month: 'short' });
     const label = d.pct === null
-      ? `${fmt(tz, d.date, { day: 'numeric', month: 'short' })}: no data`
-      : `${fmt(tz, d.date, { day: 'numeric', month: 'short' })}: ${uptimeText(d.pct)} up (${d.checks} checks)`;
+      ? `${day}: no data`
+      : `${day}: ${uptimeText(d.pct)} up${d.checks ? ` (${d.checks} checks)` : ''}`;
     return `<span class="bar bar-${uptimeClass(d.pct)}" data-tip="${h(label)}"></span>`;
   }).join('');
-  const detail = ep.latest
-    ? (ep.latest.ok
-      ? `${num.format(ep.latest.ms)} ms`
-      : h(ep.latest.error || `HTTP ${ep.latest.code}`))
-    : '';
+  const l = ep.latest;
+  let detail = '';
+  if (l && ep.status === 'up' && l.ms != null) detail = `${num.format(l.ms)} ms`;
+  else if (l && ep.status === 'down') {
+    detail = h(l.error || (l.code ? `HTTP ${l.code}` : 'Down'));
+    if (l.since) detail += ` since ${fmt(tz, l.since, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`;
+  }
+  const href = ep.url ? ep.url.replace(/:\d+\/.*$/, '/') : null;
+  const name = href ? `<a href="${h(href)}" rel="noopener noreferrer">${h(ep.name)}</a>` : h(ep.name);
+  const source = ep.source === 'uptimerobot'
+    ? `UptimeRobot${ep.interval ? `, every ${Math.round(ep.interval / 60)} min` : ''}`
+    : ep.source === 'probe' ? 'Checked from GitHub' : '';
   return `
         <div class="col-md-6">
-          <div class="card card_style endpoint endpoint-${ep.status}">
+          <div class="card card_style endpoint endpoint-${ep.status} impact-${ep.impact}">
             <div class="endpoint-head">
               <div>
-                <h3 class="endpoint-name"><a href="${h(ep.url.replace(/:\d+\/.*$/, '/'))}" rel="noopener noreferrer">${h(ep.name)}</a></h3>
-                <div class="endpoint-desc">${h(ep.description)}</div>
+                <h3 class="endpoint-name">${name}${ep.region ? ` <span class="region-chip">${h(ep.region.toUpperCase())}</span>` : ''}</h3>
+                <div class="endpoint-desc">${h(ep.description || '')}${source ? ` · <span class="endpoint-source">${source}</span>` : ''}</div>
               </div>
               <div class="status-chip status-${ep.status}">
                 <i class="fas ${s.icon}" aria-hidden="true"></i> ${s.label}
               </div>
             </div>
-            <div class="uptime" role="img" aria-label="${h(ep.name)} daily uptime, last ${ep.days.length} days: ${uptimeText(ep.uptime)}">
+            <div class="uptime" role="img" aria-label="${h(ep.label)} daily uptime, last ${ep.days.length} days: ${uptimeText(ep.uptime)}">
               ${bars}
             </div>
             <div class="endpoint-foot">
               <span>${ep.days.length} days ago</span>
-              <span><strong>${uptimeText(ep.uptime)}</strong> uptime${detail ? ` · ${detail}` : ''}</span>
               <span>Today</span>
             </div>
+            <div class="endpoint-stats"><strong>${uptimeText(ep.uptime)}</strong> uptime${detail ? ` · ${detail}` : ''}</div>
           </div>
         </div>`;
+}
+
+/**
+ * Shared services first, then regional ones together, so the same service in
+ * BGO and OSL sits side by side (ordered by service, then by region).
+ */
+function serviceGroups(endpoints, config, tz) {
+  const shared = endpoints.filter((e) => !e.region);
+  const order = (id) => { const i = config.regions.findIndex((r) => r.id === id); return i < 0 ? 99 : i; };
+  const firstIndex = (svc) => endpoints.findIndex((e) => e.service === svc);
+  const regional = endpoints
+    .filter((e) => e.region)
+    .sort((a, b) => firstIndex(a.service) - firstIndex(b.service) || order(a.region) - order(b.region));
+  const row = (eps) => `<div class="row g-4">${eps.map((ep) => endpointCard(ep, tz)).join('')}\n        </div>`;
+  if (!regional.length) return row(shared);
+  return [['Shared services', shared], ['Regional services', regional]]
+    .filter(([, eps]) => eps.length)
+    .map(([title, eps]) => `\n        <h3 class="group-title">${title}</h3>\n        ${row(eps)}`).join('');
 }
 
 const anchor = (m) => m.id.replace(/[^\w-]/g, '-');
@@ -276,9 +304,8 @@ ${active.length ? `
     <section id="services" class="container">
       <div class="section">
         <h2>Services</h2>
-        <p class="text-muted">Checked from outside NREC every 15 minutes. Bars show daily uptime for the last ${endpoints[0]?.days.length ?? 0} days.</p>
-        <div class="row g-4">${endpoints.map((ep) => endpointCard(ep, tz)).join('')}
-        </div>
+        <p class="text-muted">Monitored from outside NREC. Bars show daily uptime for the last ${endpoints[0]?.days.length ?? 0} days.</p>
+        ${serviceGroups(endpoints, config, tz)}
         <div class="legend">
           <span><span class="bar bar-good"></span> 99.9% or more</span>
           <span><span class="bar bar-warning"></span> 95–99.9%</span>

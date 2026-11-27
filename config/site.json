@@ -5,27 +5,41 @@
   "timezone": "Europe/Oslo",
   "endpoints": [
     {
-      "id": "api",
-      "name": "api.nrec.no",
+      "id": "api-bgo",
+      "service": "api",
+      "name": "API",
       "description": "OpenStack API",
+      "region": "bgo",
+      "impact": "core",
       "url": "https://api.nrec.no:5000/v3"
+    },
+    {
+      "id": "api-osl",
+      "service": "api",
+      "name": "API",
+      "description": "OpenStack API",
+      "region": "osl",
+      "impact": "core"
     },
     {
       "id": "dashboard",
       "name": "dashboard.nrec.no",
       "description": "Web dashboard",
+      "impact": "core",
       "url": "https://dashboard.nrec.no/dashboard/auth/login/"
     },
     {
       "id": "access",
       "name": "access.nrec.no",
       "description": "Sign-up and access",
+      "impact": "minor",
       "url": "https://access.nrec.no/"
     },
     {
       "id": "docs",
       "name": "docs.nrec.no",
       "description": "Documentation",
+      "impact": "minor",
       "url": "https://docs.nrec.no/"
     }
   ],

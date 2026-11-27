@@ -7,7 +7,8 @@
 //   index.html            the status page
 //   feed.xml              RSS feed of all messages (all sources)
 //   status.json           machine-readable summary (for nrec.no, the dashboard, ...)
-//   badges/<id>.json      shields.io endpoint badges, one per checked endpoint
+//   badges/<id>.json      shields.io endpoint badges, one per endpoint, plus one
+//                         per service that runs in several regions (e.g. api)
 //   badges/overall.json
 //   assets/               css, images
 
@@ -55,45 +56,77 @@ const sourceErrors = [
 ].filter(Boolean);
 
 // ---- endpoints -----------------------------------------------------------
+// Configured endpoints, plus UptimeRobot monitors whose key name matched no
+// endpoint (shown under their UptimeRobot name until added to the config).
 const DAYS = config.checks.keepDailyDays;
-const endpoints = config.endpoints.map((ep) => {
+const regionName = (id) => config.regions.find((r) => r.id === id)?.name || id;
+const guessRegion = (s) => config.regions.find((r) => new RegExp(`\\b(${r.id}|${r.name})\\b`, 'i').test(s))?.id;
+const autoEndpoints = Object.entries(checks.endpoints || {})
+  .filter(([, e]) => e.auto && e.monitor)
+  .map(([id, e]) => ({
+    id, name: e.monitor.host || e.monitor.name, description: e.monitor.name,
+    region: guessRegion(`${id} ${e.monitor.name}`), impact: 'minor', url: e.monitor.host ? `https://${e.monitor.host}/` : null,
+  }));
+
+const endpoints = [...config.endpoints, ...autoEndpoints].map((ep) => {
   const e = checks.endpoints?.[ep.id];
   const latest = e?.latest || null;
   const days = [];
-  let up = 0, total = 0;
+  let up = 0, total = 0, pctSum = 0, pctDays = 0;
   for (let i = DAYS - 1; i >= 0; i--) {
     const date = dayKey(now.getTime() - i * 864e5);
+    const pct = e?.dailyPct?.[date];
     const d = e?.daily?.[date];
-    if (d && d[1] > 0) {
+    if (Number.isFinite(pct)) {
+      pctSum += pct; pctDays++;
+      days.push({ date, pct, checks: null });
+    } else if (d && d[1] > 0) {
       up += d[0]; total += d[1];
+      pctSum += (100 * d[0]) / d[1]; pctDays++;
       days.push({ date, pct: (100 * d[0]) / d[1], checks: d[1] });
     } else {
       days.push({ date, pct: null, checks: 0 });
     }
   }
-  const status = !latest ? 'unknown' : latest.ok ? 'up' : 'down';
+  const state = latest?.state || (latest ? (latest.ok ? 'up' : 'down') : 'unknown');
+  const status = { up: 'up', down: 'down', paused: 'paused' }[state] || 'unknown';
+  const uptime = Number.isFinite(e?.uptime?.d90) && e.source === 'uptimerobot'
+    ? e.uptime.d90
+    : pctDays ? pctSum / pctDays : null;
   return {
+    impact: 'core',
     ...ep,
+    service: ep.service || ep.id,
+    label: ep.region ? `${ep.name} (${regionName(ep.region)})` : ep.name,
+    regionName: ep.region ? regionName(ep.region) : null,
+    source: e?.source || null,
+    interval: e?.monitor?.interval || null,
     status,
     latest,
-    uptime: total ? (100 * up) / total : null,
+    uptime,
     days,
   };
 });
 
-const known = endpoints.filter((e) => e.status !== 'unknown');
-const down = known.filter((e) => e.status === 'down');
+// Headline. Core services (API, dashboard) decide whether there is an
+// outage; a minor one (docs, sign-up) being down is mentioned but doesn't
+// make it look like running instances are affected.
+const known = endpoints.filter((e) => e.status === 'up' || e.status === 'down');
+const core = known.filter((e) => e.impact !== 'minor');
+const coreDown = core.filter((e) => e.status === 'down');
+const minorDown = known.filter((e) => e.impact === 'minor' && e.status === 'down');
 let overall;
 if (!known.length) overall = { level: 'unknown', text: 'Status unknown' };
-else if (!down.length) overall = { level: 'up', text: 'All systems operational' };
-else if (down.length === known.length) overall = { level: 'down', text: 'Major outage' };
-else overall = { level: 'partial', text: `${down.map((e) => e.name).join(', ')} not responding` };
+else if (coreDown.length && coreDown.length === core.length) overall = { level: 'down', text: 'Major outage' };
+else if (coreDown.length) overall = { level: 'partial', text: `${coreDown.map((e) => e.label).join(', ')} not responding` };
+else overall = { level: 'up', text: 'All systems operational' };
 // A declared incident or maintenance outranks "all operational".
 if (overall.level === 'up' || overall.level === 'unknown') {
   const incident = active.find((m) => m.phase === 'ongoing');
   const maint = active.find((m) => m.phase === 'in-progress');
   if (incident) overall = { level: 'partial', text: `Ongoing incident: ${incident.title || 'see below'}` };
   else if (maint) overall = { level: 'maintenance', text: `Maintenance in progress: ${maint.title || 'see below'}` };
+  else if (minorDown.length && overall.level === 'up') overall = { level: 'minor', text: `Core services operational · ${minorDown.map((e) => e.label).join(', ')} not responding` };
 }
 
 // ---- metrics -------------------------------------------------------------
@@ -127,16 +160,25 @@ const model = { config, now, checksUpdated: checks.updated, endpoints, overall, 
 await writeFile(join(outDir, 'index.html'), renderPage(model));
 
 // shields.io "endpoint" badges: https://shields.io/badges/endpoint-badge
-const badgeColor = { up: 'brightgreen', down: 'red', partial: 'orange', maintenance: 'blue', unknown: 'lightgrey' };
+const badgeColor = { up: 'brightgreen', down: 'red', partial: 'orange', minor: 'yellow', maintenance: 'blue', paused: 'lightgrey', unknown: 'lightgrey' };
+const badgeText = { up: 'up', down: 'down', partial: 'partly down', paused: 'paused', unknown: 'no data' };
 await mkdir(join(outDir, 'badges'), { recursive: true });
+const badge = (label, status) => ({
+  schemaVersion: 1, label, message: badgeText[status], color: badgeColor[status], cacheSeconds: 300,
+});
 for (const ep of endpoints) {
-  await writeJson(join(outDir, 'badges', `${ep.id}.json`), {
-    schemaVersion: 1,
-    label: ep.name,
-    message: { up: 'up', down: 'down', unknown: 'no data' }[ep.status],
-    color: badgeColor[ep.status],
-    cacheSeconds: 300,
-  });
+  await writeJson(join(outDir, 'badges', `${ep.id}.json`), badge(ep.label, ep.status));
+}
+// One badge per service across regions, e.g. badges/api.json for api-bgo + api-osl.
+const services = Map.groupBy(endpoints, (ep) => ep.service);
+for (const [service, eps] of services) {
+  if (eps.length < 2 || endpoints.some((ep) => ep.id === service)) continue;
+  const st = eps.map((e) => e.status);
+  const status = st.every((x) => x === 'up') ? 'up'
+    : st.every((x) => x === 'down') ? 'down'
+    : st.includes('down') ? 'partial'
+    : st.includes('up') ? 'up' : 'unknown';
+  await writeJson(join(outDir, 'badges', `${service}.json`), badge(eps[0].name, status));
 }
 await writeJson(join(outDir, 'badges', 'overall.json'), {
   schemaVersion: 1,
@@ -150,9 +192,10 @@ await writeJson(join(outDir, 'status.json'), {
   generated: now.toISOString(),
   checksUpdated: checks.updated || null,
   overall,
-  endpoints: endpoints.map(({ id, name, url, status, latest, uptime }) => ({
-    id, name, url, status,
+  endpoints: endpoints.map(({ id, service, name, region, impact, source, status, latest, uptime }) => ({
+    id, service, name, region: region || null, impact, source, status,
     lastCheck: latest?.t || null,
+    since: latest?.since || null,
     responseMs: latest?.ms ?? null,
     uptime90d: uptime === null ? null : Number(uptime.toFixed(3)),
   })),
