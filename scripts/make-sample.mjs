@@ -78,7 +78,7 @@ await writeJson(join(out, 'issues.json'), {
   items: [
     {
       number: 103,
-      title: 'Slow volume attach in Oslo',
+      title: 'Incident: Slow volume attach in Oslo',
       body: `### Summary\n\nAttaching **block storage volumes** to instances in OSL takes several minutes. Running instances and existing volumes are not affected. :hourglass_flowing_sand:\n\n### Regions\n\n- [ ] Bergen (BGO)\n- [X] Oslo (OSL)\n\n### Services\n\n- [ ] Compute\n- [X] Block storage\n- [ ] Object storage\n- [ ] Network\n- [ ] DNS\n- [ ] Dashboard\n- [ ] API\n- [ ] Access\n\n### Start\n\n${local(t0 - 2 * hour)}`,
       labels: ['incident'],
       state: 'open',

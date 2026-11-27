@@ -121,7 +121,7 @@ export async function loadFileMessages(dir, { tz, repoUrl, repoPath = 'messages'
       id: `file:${name}`,
       source: 'file',
       type,
-      title: meta.title ? emojify(String(meta.title)) : null,
+      title: meta.title ? cleanTitle(emojify(String(meta.title)), type) : null,
       html: ext === '.txt' ? renderText(body) : renderMarkdown(body, { trusted: true }),
       timestamp: parseLocalTime(date, tz),
       start: parseLocalTime(meta.start, tz),
@@ -189,7 +189,7 @@ export function fromIssue(issue, { tz, labels, regions, services }) {
     id: `issue:${issue.number}`,
     source: 'issue',
     type,
-    title: emojify(issue.title),
+    title: cleanTitle(emojify(issue.title), type),
     html: renderMarkdown(description),
     timestamp: issue.created_at,
     start: parseLocalTime(f.start || f['start time'], tz) || (type === 'incident' ? issue.created_at : null),
@@ -202,6 +202,20 @@ export function fromIssue(issue, { tz, labels, regions, services }) {
     url: issue.html_url,
     number: issue.number,
   };
+}
+
+/**
+ * Drop a leading "Incident:" / "Maintenance:" / "News:" from a title. The type
+ * is shown separately on the page, and the issue forms pre-fill the prefix to
+ * make issues easy to spot on GitHub.
+ */
+export function cleanTitle(title, type) {
+  if (!title) return title;
+  const prefixes = { incident: 'incident', maintenance: 'maintenance', news: 'news', info: 'info', important: 'important', event: 'event' };
+  const re = new RegExp(`^\\s*\\[?(${Object.values(prefixes).join('|')})\\]?\\s*[:\\-–]\\s*`, 'i');
+  const cleaned = title.replace(re, '').trim();
+  if (!cleaned) return title;
+  return cleaned === title ? title : cleaned[0].toUpperCase() + cleaned.slice(1);
 }
 
 // ---- phase ------------------------------------------------------------------

@@ -40,6 +40,8 @@ Issues are published only when they have one of the labels `incident`,
 the repository (owner, member or collaborator, or a user listed in
 `issues.trustedUsers` in `config/site.json`). The same applies to each comment.
 Anyone else can still open issues; they just don't appear on the page.
+A leading `Incident:`, `Maintenance:` or `News:` in a title (pre-filled by the
+issue forms) is dropped on the page, since the label already sets the type.
 Raw HTML in issues is shown as text, and only http(s) and mailto links are kept.
 
 Incidents and maintenance get a phase from their dates and state:
