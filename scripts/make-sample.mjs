@@ -41,8 +41,26 @@ await writeJson(join(out, 'metrics.json'), {
 });
 
 // --- checks.json --------------------------------------------------------
+// Regional endpoints look like UptimeRobot data (daily percentages and
+// uptime ratios); the rest look like our own checks (counts per day).
 const endpoints = {};
 for (const ep of config.endpoints) {
+  if (ep.region) {
+    const dailyPct = {};
+    for (let i = days - 1; i >= 0; i--) {
+      dailyPct[dayKey(now.getTime() - i * 864e5)] = rand() < 0.05 ? Number((100 - rand() * 8).toFixed(3)) : 100;
+    }
+    const vals = Object.values(dailyPct);
+    const avg = (n) => Number((vals.slice(-n).reduce((a, b) => a + b, 0) / n).toFixed(3));
+    endpoints[ep.id] = {
+      source: 'uptimerobot',
+      monitor: { id: 800000000 + endpoints.length, name: `NREC ${ep.name} ${ep.region.toUpperCase()}`, host: 'api.nrec.no:5000', interval: 300 },
+      latest: { t: now.toISOString(), ok: true, state: 'up', ms: Math.round(150 + rand() * 200), since: new Date(now.getTime() - 9 * 864e5).toISOString() },
+      uptime: { d1: avg(1), d7: avg(7), d30: avg(30), d90: avg(90) },
+      dailyPct,
+    };
+    continue;
+  }
   const daily = {};
   for (let i = days - 1; i >= 0; i--) {
     const total = i === 0 ? now.getUTCHours() * 4 + 1 : 96;
@@ -55,11 +73,15 @@ for (const ep of config.endpoints) {
     const t = new Date(now.getTime() - i * 15 * 6e4).toISOString();
     recent.push([t, 1, Math.round(300 + rand() * 400), 200]);
   }
-  const latest = { t: now.toISOString(), ok: true, code: 200, ms: recent.at(-1)[2] };
-  endpoints[ep.id] = { latest, recent, daily };
+  const latest = { t: now.toISOString(), ok: true, state: 'up', code: 200, ms: recent.at(-1)[2] };
+  endpoints[ep.id] = { source: 'probe', latest, recent, daily };
 }
-// Show what a current outage looks like on one endpoint.
-endpoints.dashboard.latest = { t: now.toISOString(), ok: false, code: 503, ms: 1204 };
+// Show what an outage looks like: the API in Oslo (core) and docs (minor).
+endpoints['api-osl'].latest = {
+  t: now.toISOString(), ok: false, state: 'down', ms: null,
+  since: new Date(Math.floor(now.getTime() / 6e4) * 6e4 - 47 * 6e4).toISOString(), error: 'Connection Timeout',
+};
+endpoints.docs.latest = { t: now.toISOString(), ok: false, state: 'down', code: 502, ms: 840 };
 await writeJson(join(out, 'checks.json'), { updated: now.toISOString(), endpoints }, false);
 
 // --- issues.json: what collect.mjs stores for labelled GitHub issues -------

@@ -1,6 +1,8 @@
 # NREC status
 
-[![api.nrec.no](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fapi.json)](https://caleno.github.io/nrec-status/)
+[![API](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fapi.json)](https://caleno.github.io/nrec-status/)
+[![API BGO](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fapi-bgo.json)](https://caleno.github.io/nrec-status/)
+[![API OSL](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fapi-osl.json)](https://caleno.github.io/nrec-status/)
 [![dashboard.nrec.no](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fdashboard.json)](https://caleno.github.io/nrec-status/)
 [![access.nrec.no](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Faccess.json)](https://caleno.github.io/nrec-status/)
 [![docs.nrec.no](https://img.shields.io/endpoint?url=https%3A%2F%2Fcaleno.github.io%2Fnrec-status%2Fbadges%2Fdocs.json)](https://caleno.github.io/nrec-status/)
@@ -11,8 +13,9 @@ GitHub Pages, so it stays up when NREC itself is down.
 
 It shows:
 
-- **Services**: the four public endpoints, checked from outside NREC every
-  15 minutes, with 90 days of daily uptime.
+- **Services**: shared services (dashboard, sign-up, docs) and regional ones
+  (the API in BGO and OSL), from UptimeRobot, with 90 days of daily uptime.
+  Endpoints without an UptimeRobot key are checked by the workflow itself.
 - **Active now**: ongoing incidents and current or planned maintenance.
 - **News & issues**: messages from three sources, merged by date:
   report.nrec.no, files in [`messages/`](messages/), and GitHub issues.
@@ -22,7 +25,43 @@ It shows:
 It also publishes `feed.xml` (RSS of all messages), `status.json` (a summary
 other sites can read) and a
 [shields.io endpoint badge](https://shields.io/badges/endpoint-badge) per
-endpoint under `badges/`, used at the top of this README.
+endpoint under `badges/`, used at the top of this README. A service that runs
+in several regions also gets one combined badge (`api.json`: *up*, *partly
+down* or *down*).
+
+## Service status and UptimeRobot
+
+Each endpoint in `config/site.json` has:
+
+| Field | Meaning |
+|---|---|
+| `id` | Unique name, e.g. `api-bgo`. Also the name of its UptimeRobot key (below). |
+| `service` | Groups the same service across regions (`api`). Defaults to `id`. |
+| `region` | `bgo`, `osl`, … or left out for shared services. |
+| `impact` | `core` or `minor`. Only **core** services (API, dashboard) being down changes the headline to an outage. A **minor** one (docs, sign-up) shows *Core services operational · docs.nrec.no not responding*. |
+| `url` | Optional. Used for the link and for our own check when there's no UptimeRobot key. |
+| `uptimerobot` | Optional. The key name, if it differs from `id`. |
+
+**UptimeRobot keys** live in one repository secret,
+`UPTIMEROBOT_MONITOR_KEYS` (Settings → Secrets and variables → Actions), one
+[monitor-specific API key](https://uptimerobot.com/api/legacy/) per line:
+
+```
+api-bgo=m123456789-...
+api-osl=m987654321-...
+# dashboard=...
+```
+
+- Names are matched to endpoint ids, ignoring case; `_` and spaces count as `-`.
+- A key whose name matches no endpoint is still shown, under its UptimeRobot
+  monitor name, until you add it to the config.
+- One API call per key per run (the free plan allows 10 a minute; calls are
+  spaced out above 8 keys). The 90 daily bars come from the same call.
+- Only what the page shows (name, status, uptime, response time, time of the
+  last change) is saved. Keys and monitor settings never reach the public
+  `data` branch, and keys are never logged.
+- If UptimeRobot can't be reached or a key fails, that endpoint falls back to
+  our own check (if it has a `url`) for that run.
 
 ## Publishing news, maintenance and incidents
 
@@ -54,15 +93,16 @@ at the top when all checks are green.
 
 ```
 GitHub Actions: every 15 min, on push to main, on issue changes
-  ├─ check api / dashboard / access / docs .nrec.no  ─┐
+  ├─ UptimeRobot monitors, or our own checks         ─┐
   ├─ fetch report.nrec.no/api/v1/status/rss           ├─► data branch (JSON)
   ├─ fetch labelled GitHub issues and comments       ─┘
   └─ build static HTML from the data + messages/ ─────► GitHub Pages
 ```
 
-- `config/site.json`: endpoints to check, news feed URL, regions, thresholds.
-- `scripts/collect.mjs`: runs the checks and fetches news and issues into a
-  data directory. A failed fetch keeps the last good copy.
+- `config/site.json`: endpoints (regions, impact), news feed URL, thresholds.
+- `scripts/collect.mjs`: gets service status, news and issues into a data
+  directory. A failed fetch keeps the last good copy.
+- `scripts/lib/uptimerobot.mjs`: reads one UptimeRobot monitor per key.
 - `scripts/lib/messages.mjs`: turns all three sources into one kind of message
   (Markdown, issue forms, dates, phases).
 - `scripts/build.mjs` + `src/page.mjs`: render the page, feed, badges and `status.json`.
@@ -137,6 +177,6 @@ and the page labels the numbers "Sample data".
 - **report.nrec.no JSON API**: `GET /api/v1/status` returns HTTP 500 because
   the response (a list) doesn't match its OpenAPI spec (an object), so this
   site reads the RSS feed instead.
-- **api.nrec.no check URL**: set to Keystone on port 5000 (`/v3`). It was not
-  possible to verify from the development environment; confirm on the first
-  workflow run.
+- **Fresher updates**: the page only changes when the workflow runs, and
+  GitHub's schedule is unreliable. An UptimeRobot webhook or a cron job on an
+  NREC server could start the workflow instead.

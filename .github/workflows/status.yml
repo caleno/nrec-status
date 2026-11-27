@@ -58,10 +58,12 @@ jobs:
             git archive FETCH_HEAD | tar -x -C data
           fi
 
-      - name: Collect checks, news and issues
+      - name: Collect service status, news and issues
         run: node scripts/collect.mjs --data data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # One "name=key" line per UptimeRobot monitor-specific API key.
+          UPTIMEROBOT_MONITOR_KEYS: ${{ secrets.UPTIMEROBOT_MONITOR_KEYS }}
 
       - name: Save data to the data branch
         run: |

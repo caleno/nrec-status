@@ -324,3 +324,36 @@ a.news-source:hover { color: var(--nrec-steel); text-decoration: underline; }
 @media (max-width: 576px) {
   .news-source { margin-left: 0; width: 100%; }
 }
+
+/* ---- regions and impact -------------------------------------------------- */
+.group-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--nrec-ink);
+  margin: 1.75rem 0 0.75rem;
+}
+.group-title:first-of-type { margin-top: 0.5rem; }
+.region-chip {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0 0.45rem;
+  border-radius: 6px;
+  background: #e2ecf5;
+  color: var(--nrec-blue);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: 2px;
+}
+.endpoint-source { white-space: nowrap; }
+.status-paused { color: var(--nrec-muted); }
+/* A minor service being down is shown, but less loudly than a core one. */
+.endpoint-down.impact-minor { box-shadow: 0 0 0 2px var(--warning), 0 1px 3px rgba(0, 0, 0, 0.1); }
+.overall-minor i { color: #c28a00; }
+.endpoint-foot { margin-top: 0.35rem; font-size: 0.75rem; }
+.endpoint-stats {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--nrec-muted);
+}
+.endpoint-stats strong { color: var(--nrec-ink); }
