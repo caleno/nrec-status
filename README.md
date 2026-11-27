@@ -184,5 +184,19 @@ and the page labels the numbers "Sample data".
   the response (a list) doesn't match its OpenAPI spec (an object), so this
   site reads the RSS feed instead.
 - **Fresher updates**: the page only changes when the workflow runs, and
-  GitHub's schedule is unreliable. An UptimeRobot webhook or a cron job on an
-  NREC server could start the workflow instead.
+  GitHub's schedule is unreliable (the workflow's own schedule, at :07, :22,
+  :37 and :52, is only a backup). Something outside GitHub *and outside NREC*
+  should start it every 15 minutes, for example cron on a UiB/UiO server or a
+  Cloudflare Workers cron trigger:
+
+  ```bash
+  curl -fsS -X POST \
+    -H "Authorization: Bearer $GH_TOKEN" \
+    -H "Accept: application/vnd.github+json" \
+    https://api.github.com/repos/caleno/nrec-status/actions/workflows/status.yml/dispatches \
+    -d '{"ref":"main"}'
+  ```
+
+  `GH_TOKEN` is a fine-grained personal access token for this repository only,
+  with just *Actions: Read and write*. Runs never overlap: the workflow allows
+  one at a time, so extra triggers wait their turn.
