@@ -2,8 +2,11 @@ name: Check and publish status
 
 on:
   schedule:
-    # GitHub may delay scheduled runs by several minutes under load.
-    - cron: '*/15 * * * *'
+    # Backup only: GitHub runs schedules when it has capacity and often
+    # delays or skips them, worst on the busy minutes (:00, :15, ...), so
+    # these are off-peak. For reliable runs, start the workflow from outside
+    # (see "Fresher updates" in the README).
+    - cron: '7,22,37,52 * * * *'
   push:
     branches: [main]
   workflow_dispatch:
