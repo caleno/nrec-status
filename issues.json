@@ -1,0 +1,67 @@
+{
+  "updated": "2026-11-28T09:25:15.017Z",
+  "repo": "caleno/nrec-status",
+  "items": [
+    {
+      "number": 6,
+      "title": "Windows has been retired 🎉",
+      "body": "### Message\n\nAnother test message using issues with label  🪟 ",
+      "labels": [
+        "news"
+      ],
+      "state": "open",
+      "created_at": "2026-11-27T10:14:31Z",
+      "updated_at": "2026-11-27T10:14:31Z",
+      "closed_at": null,
+      "html_url": "https://github.com/caleno/nrec-status/issues/6",
+      "author": "caleno",
+      "comments": []
+    },
+    {
+      "number": 5,
+      "title": "Maintenance: Patch core services, instances will not be affected",
+      "body": "### Summary\n\nServices will be unavailable between 10:00 and 14:00. Running instances will not be affected. \n\n### Start\n\n2026-12-02 10:00\n\n### End\n\n2026-12-02 14:00\n\n### Regions\n\n- [ ] Bergen (BGO)\n- [ ] Oslo (OSL)\n\n### Services\n\n- [ ] Compute\n- [ ] Block storage\n- [ ] Object storage\n- [ ] Network\n- [ ] DNS\n- [ ] Dashboard\n- [ ] API\n- [ ] Access",
+      "labels": [
+        "maintenance"
+      ],
+      "state": "open",
+      "created_at": "2026-11-27T10:09:25Z",
+      "updated_at": "2026-11-27T10:15:58Z",
+      "closed_at": null,
+      "html_url": "https://github.com/caleno/nrec-status/issues/5",
+      "author": "caleno",
+      "comments": []
+    },
+    {
+      "number": 3,
+      "title": "Incident: We have rats 🐀",
+      "body": "### Summary\n\nA rat sneaked into the server hall and chewed through some network cables like cheese doodles at movie night. We tried to catch it, but it escaped through a TCP packet 📦. We are working on restoring the affected services.\n\nSorry for the inconvenience. We have no excuse, other than that the culprit was a bloody rat 🐀\n\n### Regions\n\n- [x] Bergen (BGO)\n- [ ] Oslo (OSL)\n\n### Services\n\n- [ ] Compute\n- [ ] Block storage\n- [ ] Object storage\n- [ ] Network\n- [ ] DNS\n- [ ] Dashboard\n- [ ] API\n- [ ] Access\n\n### Start\n\n_No response_",
+      "labels": [
+        "incident"
+      ],
+      "state": "closed",
+      "created_at": "2026-11-27T06:56:53Z",
+      "updated_at": "2026-11-27T10:19:17Z",
+      "closed_at": "2026-11-27T10:19:17Z",
+      "html_url": "https://github.com/caleno/nrec-status/issues/3",
+      "author": "caleno",
+      "comments": [
+        {
+          "body": "working on restoring",
+          "created_at": "2026-11-27T06:57:04Z",
+          "author": "caleno"
+        },
+        {
+          "body": "This is of course just a joke ",
+          "created_at": "2026-11-27T06:59:09Z",
+          "author": "caleno"
+        },
+        {
+          "body": "🪤  ",
+          "created_at": "2026-11-27T10:19:17Z",
+          "author": "caleno"
+        }
+      ]
+    }
+  ]
+}
